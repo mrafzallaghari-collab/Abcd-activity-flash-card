@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ABCD Flashcard Learning - GitHub Version</title>
+    <style>
+        /* Styles for the flashcard system */
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            background-color: #f4f4f9;
+            padding: 20px;
+        }
+        .flashcard-container {
+            width: 90%;
+            max-width: 500px;
+            background-color: #fff;
+            padding: 30px;
+            border-radius: 15px;
+            box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+            text-align: center;
+        }
+        h1 {
+            color: #4CAF50; /* Green */
+            margin-bottom: 30px;
+        }
+        .flashcard {
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border: 3px solid #2196F3; /* Blue */
+            border-radius: 10px;
+            padding: 20px;
+            background-color: #E3F2FD; /* Light Blue */
+        }
+        .flashcard h2 {
+            font-size: 5em;
+            margin: 0;
+            color: #2196F3;
+        }
+        .flashcard h3 {
+            font-size: 2em;
+            color: #333;
+            margin-top: 10px;
+        }
+        .flashcard img {
+            max-width: 90%;
+            max-height: 200px;
+            margin-top: 20px;
+            border-radius: 5px;
+            object-fit: contain;
+        }
+        .control-buttons {
+            display: flex;
+            justify-content: space-between;
+            width: 100%;
+            margin-top: 20px;
+        }
+        .control-buttons button {
+            padding: 10px 20px;
+            font-size: 1.1em;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        #prev-button {
+            background-color: #FF9800; /* Orange */
+            color: white;
+        }
+        #next-button {
+            background-color: #4CAF50; /* Green */
+            color: white;
+        }
+        #prev-button:hover {
+            background-color: #f57c00;
+        }
+        #next-button:hover {
+            background-color: #388E3C;
+        }
+    </style>
+</head>
+<body>
+
+<div class="flashcard-container">
+    <h1>📚 Single Flashcard Learning (A-E)</h1>
+
+    <div class="flashcard">
+        <h2 id="card-letter"></h2>
+        <h3 id="card-word"></h3>
+        <button id="sound-button" onclick="playSound()" style="padding: 10px 15px; background-color: #2196F3; color: white; border: none; border-radius: 5px; margin-top: 15px; cursor: pointer;">🔊 Hear Sound</button>
+        <img id="card-image" src="" alt="Learning Image">
+    </div>
+
+    <div class="control-buttons">
+        <button id="prev-button" onclick="changeCard(-1)">Previous</button>
+        <button id="next-button" onclick="changeCard(1)">Next</button>
+    </div>
+</div>
+
+<script>
+    // Define the data for A to E
+    const flashcardData = [
+        { letter: 'A', word: 'Apple', image: 'a_img.jpg', sound: 'a_sound.mp3' },
+        { letter: 'B', word: 'Ball', image: 'b_img.jpg', sound: 'b_sound.mp3' },
+        { letter: 'C', word: 'Cat', image: 'c_img.jpg', sound: 'c_sound.mp3' },
+        { letter: 'D', word: 'Dog', image: 'd_img.jpg', sound: 'd_sound.mp3' },
+        { letter: 'E', word: 'Elephant', image: 'e_img.jpg', sound: 'e_sound.mp3' }
+    ];
+
+    let currentCardIndex = 0;
+
+    function displayCard(index) {
+        const data = flashcardData[index];
+        document.getElementById('card-letter').textContent = data.letter;
+        document.getElementById('card-word').textContent = `${data.letter} is for ${data.word}`;
+        
+        // *** File Path for GitHub: Uses the 'assets/' folder ***
+        document.getElementById('card-image').src = 'assets/' + data.image; 
+
+        // Ensure buttons are correctly enabled/disabled
+        document.getElementById('prev-button').disabled = index === 0;
+        document.getElementById('next-button').disabled = index === flashcardData.length - 1;
+
+        // Play the sound automatically when the card loads
+        playSound();
+    }
+
+    function changeCard(direction) {
+        currentCardIndex += direction;
+        // Check boundaries
+        if (currentCardIndex < 0) {
+            currentCardIndex = 0;
+        } else if (currentCardIndex >= flashcardData.length) {
+            currentCardIndex = flashcardData.length - 1;
+        }
+        displayCard(currentCardIndex);
+    }
+
+    function playSound() {
+        const soundFile = flashcardData[currentCardIndex].sound;
+        // *** File Path for GitHub: Uses the 'assets/' folder ***
+        const audio = new Audio('assets/' + soundFile); 
+        
+        audio.play().catch(error => {
+            console.error("Error playing sound:", error);
+            // Show error message on button if sound fails
+            const soundButton = document.getElementById('sound-button');
+            soundButton.textContent = "🔊 Sound Error: File Missing!";
+            soundButton.style.backgroundColor = "red";
+            setTimeout(() => {
+                soundButton.textContent = "🔊 Hear Sound";
+                soundButton.style.backgroundColor = "#2196F3";
+            }, 3000);
+        });
+    }
+
+    // Call displayCard initially when the page loads
+    window.onload = function() {
+        displayCard(currentCardIndex);
+    };
+
+</script>
+
+</body>
+</html>
